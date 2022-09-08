@@ -2,6 +2,7 @@ import importlib
 
 from django.db import models
 
+from django_action_reservation.managers import TargetManager, target_reserve
 from django_action_reservation.models import reservation_base_fields
 
 
@@ -19,6 +20,8 @@ class Reservation:
         module = importlib.import_module(cls.__module__)
         setattr(module, res_model.__name__, res_model)
         cls.reservation_model = res_model
+        cls.reserve_action = target_reserve
+        TargetManager().contribute_to_class(cls, 'objects_for_reserve')
 
         self.actions.extend([c(cls.reservation_model) for c in self.action_classes])
 
@@ -33,7 +36,7 @@ class Reservation:
                 models.DO_NOTHING,
                 related_name='reservations',
             ),
-            '__module__': cls.__module__
+            '__module__': cls.__module__,
         }
         return type(name, bases, attrs)
 

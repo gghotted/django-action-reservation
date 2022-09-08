@@ -46,5 +46,5 @@ class Action:
                 sleep(self.cool_time)
             sleep(self.check_interval)
 
-    def execute(self):
+    def execute(self, obj):
         raise NotImplementedError
