@@ -21,6 +21,10 @@ class Action:
         t.daemon = True
         t.start()
 
+    def reserve(self, target, time=None):
+        time = time or timezone.now()
+        self.reservation_model.objects.create(action=self.name, time=time, target=target)
+
     def loop(self):
         print('start thread %s (%s)' % (str(self.__class__), self.name))
         while True:
