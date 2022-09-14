@@ -49,6 +49,7 @@ class ActionReservationAdmin(admin.ModelAdmin):
         'started',
         'ended',
         'error_message',
+        'running_time',
         'state',
     )
     list_filter = (
@@ -63,6 +64,12 @@ class ActionReservationAdmin(admin.ModelAdmin):
     @admin.display(ordering='log__ended')
     def ended(self, obj):
         return localize(localtime(obj.log.ended)) if obj.log else None
+
+    @admin.display()
+    def running_time(self, obj):
+        if obj.log:
+            return (obj.log.ended - obj.log.started).seconds
+        return None
 
     @admin.display(ordering='log__error_message')
     def error_message(self, obj):
